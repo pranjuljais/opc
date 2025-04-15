@@ -22,9 +22,7 @@ const store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
   databaseName: "shop", // already in the URI but good to be explicit
   collection: "sessions",
-  connectionOptions: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  mongoOptions: {
     tls: true,
   },
 });
