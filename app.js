@@ -129,10 +129,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then((result) => {
     console.log("MongoDB Connected...");
     app.listen(process.env.PORT || 3000);
