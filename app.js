@@ -6,7 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
+const MongoStore = require("connect-mongo");
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
@@ -18,14 +18,6 @@ const morgan = require("morgan");
 
 const app = express();
 
-const store = new MongoDBStore({
-  uri: process.env.MONGODB_URI,
-  databaseName: "shop", // already in the URI but good to be explicit
-  collection: "sessions",
-  mongoOptions: {
-    tls: true,
-  },
-});
 const csrfProtection = csrf();
 
 // ✅ Multer Config - File Upload Setup
@@ -84,10 +76,10 @@ app.use(
     secret: "my secret",
     resave: false,
     saveUninitialized: false,
-    store: store,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      dbName: "shop",
+    }),
   })
 );
 
@@ -143,7 +135,7 @@ mongoose
   })
   .then((result) => {
     console.log("MongoDB Connected...");
-    app.listen(process.env.PORT || 3001);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((err) => {
     console.log(err);
