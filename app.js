@@ -16,12 +16,17 @@ const errorController = require("./controllers/error");
 const User = require("./models/user");
 const morgan = require("morgan");
 
-const MONGODB_URI = `mongodb+srv://solataryanonymous:npfacebook@cluster0.aizcc.mongodb.net/Shop?retryWrites=true&w=majority&appName=Cluster0`;
-
 const app = express();
+
 const store = new MongoDBStore({
-  uri: MONGODB_URI,
+  uri: process.env.MONGODB_URI,
+  databaseName: "shop", // already in the URI but good to be explicit
   collection: "sessions",
+  connectionOptions: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true,
+  },
 });
 const csrfProtection = csrf();
 
@@ -82,6 +87,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
   })
 );
 
