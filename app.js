@@ -16,7 +16,6 @@ const errorController = require("./controllers/error");
 const User = require("./models/user");
 const morgan = require("morgan");
 
-const PORT = process.env.PORT || 3000;
 const MONGODB_URI = `mongodb+srv://solataryanonymous:npfacebook@cluster0.aizcc.mongodb.net/Shop?retryWrites=true&w=majority&appName=Cluster0`;
 
 const app = express();
@@ -132,7 +131,10 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((result) => {
     console.log("MongoDB Connected...");
     app.listen(process.env.PORT || 3001);
